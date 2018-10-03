@@ -1,0 +1,109 @@
+.map-container{
+    width: 68%;
+    height: 100%;
+    position: absolute;
+}
+.back {
+    font-size: 16px;
+    box-sizing: border-box;
+    padding: 0 16px;
+    vertical-align: middle;
+    line-height:24px;
+    height: 44px;
+    border-radius: 1px;
+    border: 0ch;
+    margin-right: 20px;
+    color:rgba(0,204,255,1);
+    width:120px;
+    height:50px;
+    filter:blur(0px);
+    background-color: rgba(3,6,25,0.45);
+    background-repeat: no-repeat;
+    background-image: url(./assets/return.png) ;
+    background-position: 20% 50%;
+}
+.play-button {
+    position: absolute;
+    left: 6%;
+    margin-top: -8px;
+    border-style: dashed;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 36px;
+    height: 36px;
+}
+.play {
+    background-image: url(./assets/play.png);
+}
+.suspend {
+    background-image: url(./assets/suspended.png);
+}
+
+/* time-slider */
+#time-container {
+    pointer-events: all;
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 30px;
+    bottom: 5%;
+}
+#slider-id {
+    margin: auto;
+    left: 0px;
+    right: 0px;
+    position: absolute;
+}
+#slider-id.slider.slider-horizontal {
+    width: 80%;
+    height: 20px;
+  }
+#slider-id .slider-selection {
+	background: #00CCFF;
+    border-radius: 1px;
+}
+#slider-id .slider-handle {
+    /* background: none; */
+    background: #FFFFFF;
+    border-radius: 1px;
+    width:8px;
+    height:20px;
+    margin-left: -4px;
+}
+#slider-id .slider-track {
+    background: rgba(0, 0, 5, 0.4);
+    border-radius: 1px;
+}
+#slider-id .slider-track-high{
+    /* background: transparent; */
+    background: #CCCCCC;
+    opacity: 0.4;
+    border-radius: 1px;
+}
+#slider-id .slider-tick {
+    background: rgba(0, 0, 5, 1);
+    width: 2px;
+    height: 12px;
+    margin-left: 0px;
+    margin-top: 4px;
+}
+#slider-id .slider-tick-label{
+    text-align: end;
+    color:rgba(237,249,255,1);
+}
+.slider-tick.round{
+    border-radius: 0px
+}
+#slider-id .tooltip.tooltip-main.top{
+    opacity: 0.9;
+}
+#slider-id .tooltip.top .tooltip-arrow{
+    border-top-color: #FFFFFF;
+}
+#slider-id .tooltip-inner{
+    color: #333333;
+    background-color: #FFFFFF;
+    border-radius: 2px;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.63);
+}

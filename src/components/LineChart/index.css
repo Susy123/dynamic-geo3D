@@ -1,0 +1,52 @@
+.lineContainer{
+    position: absolute;
+    top:0px;
+    right: 0px;
+    width:31.25%;
+    min-width:500px;
+    padding:60px 50px 0 50px;
+    height:100%;
+    background:linear-gradient(90deg,rgba(3,6,25,0.85) 0%,rgba(3,6,25,0.45) 100%);
+    filter:blur(0px); 
+    box-sizing: border-box;
+}
+.lineContainer .header{
+    width:100%;
+}
+.lineContainer .header .name{
+    margin-bottom:32px;
+    font-size: 30px;
+    color:#EDF9FF;
+    line-height: 1;
+    text-align: left;
+}
+.lineContainer .header .adress{
+    margin-bottom:24px;
+    font-size: 20px;
+    color:#edf9ffcc;
+    line-height: 1;
+    text-align: left;
+}
+.lineContainer .header .descBox{
+    padding-bottom: 60px;
+    text-align: left;
+    border-bottom: 2px dashed #edf9ff80;
+    position: relative;
+}
+.lineContainer .header .descBox .capacity{
+    /* margin-right:60px; */
+    display: inline-block;
+    font-size: 20px;
+    color:#edf9ffcc;
+}
+.lineContainer .header .descBox .electicNum{
+    display: inline-block;
+    font-size: 20px;
+    color:#edf9ffcc;
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+.lineContainer .content .power{
+    margin-bottom:40px;
+}

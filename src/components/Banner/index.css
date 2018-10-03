@@ -1,0 +1,196 @@
+*{margin:0px;padding:0px;}
+.bannerContainer{
+    padding:60px 50px 0 50px;
+    width:31.25%;
+    min-width:540px;
+    height:100%;
+    background:linear-gradient(90deg,rgba(3,6,25,0.85) 0%,rgba(3,6,25,0.45) 100%);
+    filter:blur(0px); 
+    box-sizing: border-box;
+}
+.header{
+    width:100%;
+    margin-bottom:60px;
+}
+.bannerContainer .titleArea{
+    margin-bottom:32px;
+    padding-left:12px;
+    width:100%;
+    height:48px;
+    position: relative;
+    box-sizing: border-box;
+}
+.bannerContainer .titleArea .colorBulk{
+    position: absolute;
+    top:0px;
+    left:0px;
+    width:6px;
+    height:48px;
+    background-color: #0cf;
+}
+.bannerContainer .titleArea .textArea{
+    padding-left:8px;
+    width:100%;
+    height:48px;
+    text-align: left;
+    background-color: #00ccff26;
+    box-sizing: border-box;
+}
+.bannerContainer .titleArea .textArea .name{
+    margin-right:20px;
+    display: inline-block;
+    font-size:24px;
+    color:#00CCFF;
+    line-height: 48px;
+}
+.bannerContainer .titleArea .textArea .littleName{
+    display: inline-block;
+    font-size:20px;
+    color:rgba(237, 246, 255, 0.6);
+    line-height: 48px;
+}
+.header .totalText{
+    width:100%;
+    height:48px;
+    padding-left:6px;
+    text-align: left;
+    box-sizing: border-box;
+}
+.header .totalText .electicNum{
+    margin-right:20px;
+    display: inline-block;
+    font-size: 48px;
+    color:#EDF9FF;
+    line-height: 48px;
+    max-width: 350px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.header .totalText .unitText{
+    font-size:30px;
+    color:#EDF9FF;
+    vertical-align: bottom;
+}
+.content{
+    width:100%;
+}
+.content .textArea{
+    margin-bottom:32px;
+}
+.content .carouselArea{
+    width:100%;
+    height:480px;
+}
+/* 进度条区域 */
+.content .carouselArea .bannerArea{
+    width:100%;
+    height:440px;
+}
+.content .carouselArea .bannerArea .item{
+    margin-bottom:28px;
+    width:100%;
+    height:60px;
+    text-align: left;
+    position: relative;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox{
+    margin-right:16px;
+    display: inline-block;
+    width:60px;
+    height:60px;
+    font-size:34px;
+    color:#00CCFF;
+    line-height: 58px;
+    text-align: center;
+    background-color: #00ccff26;
+    border:2px solid #00ccff4d;;
+    position: relative;
+    box-sizing: border-box;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox span{
+    width:2px;
+    height:2px;
+    position: absolute;
+    background-color:#00ccff;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox .dot1{
+    left:-2px;
+    top:-2px;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox .dot2{
+    right:-2px;
+    top:-2px;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox .dot3{
+    left:-2px;
+    bottom:-2px;
+}
+.content .carouselArea .bannerArea .item .serialNumberBox .dot4{
+    right:-2px;
+    bottom:-2px;
+}
+.content .carouselArea .bannerArea .item .progressArea{
+    display: inline-block;
+    width: 100%;
+    padding-left: 76px;
+    box-sizing: border-box;
+    position: absolute;
+    top:0px;
+    left: 0px;
+}
+.content .carouselArea .bannerArea .item .progressArea .descBox{
+    margin-top:10px;
+    width:100%;
+    height: 20px;
+    font-size: 20px;
+    color:#EDF9FF;
+    position: relative;
+}
+.content .carouselArea .bannerArea .item .progressArea .descBox .name{
+    position: absolute;
+    left:0px;
+    top:0px;
+}
+.content .carouselArea .bannerArea .item .progressArea .descBox .electic{
+    position: absolute;
+    top:0px;
+    right:0px;
+}
+.content .carouselArea .bannerArea .item .progressArea .progressBox{
+    margin-top:14px;
+    width:100%;
+    height:6px;
+    background-color: #CCCCCC;
+    overflow: hidden;
+    position: relative;
+}
+.content .carouselArea .bannerArea .item .progressArea .progressBox .progressBar{
+    height:6px;
+    position: absolute;
+    left:0px;
+    top:0px;
+    background-color: #FF7070;
+}
+.content .el-carousel__indicator{
+    padding: 12px 0px;
+}
+.content .el-carousel__indicator.is-active button{
+    background-color: #00CCFF;
+}
+.content .el-carousel__indicators--outside button{
+    background-color: #CCCCCC;
+}
+.content .el-carousel__button{
+    display: block;
+    opacity: .48;
+    width: 54px;
+    height: 5px;
+    background-color: #CCCCCC;
+    border: none;
+    padding: 0;
+    transform: skew(150deg,150deg) rotate(30deg);
+}
+.content .el-carousel__arrow{
+    display: none
+}

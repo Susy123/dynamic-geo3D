@@ -1,0 +1,18 @@
+{
+    "total": "123324134",
+    "list": [
+        {"name": "华东电网","electric": 99999},
+        {"name": "华南电网","electric": 88888},
+        {"name": "华西电网","electric": 77777},
+        {"name": "华北电网","electric": 66666},
+        {"name": "华东电网2","electric": 55555},
+        {"name": "华南电网2","electric": 45454},
+        {"name": "华西电网2","electric": 34343},
+        {"name": "华北电网2","electric": 23232},
+        {"name": "华东电网3","electric": 12121},
+        {"name": "华南电网3","electric": 11111},
+        {"name": "华西电网3","electric": 9999},
+        {"name": "华北电网3","electric": 8888},
+        {"name": "华东电网4","electric": 7777}
+    ]
+}
