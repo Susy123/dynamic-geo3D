@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react';
+import ReactDOM from 'react-dom';
 import ReactEcharts from 'echarts-for-react';
 import ReactBootstrapSlider from 'react-bootstrap-slider';
 import moment from 'moment';
@@ -7,9 +8,11 @@ import 'echarts-gl';
 import china from './maps/china.json';
 import './index.css';
 import cityGeoInfo from './maps/cityGeoInfo.json';
+import farmGeoInfo from './maps/farmGeoInfo.json';
 import {get7DaysData, getTicks, getTicksLabel} from './dao.js';
 // mock
 import mockPowerArray from '../../mock/cityPower.json';
+import mockPowerArrayFarm from '../../mock/farmPower.json';
 
 var provinces = {"新疆": "xinjiang", "西藏": "xizang", "青海": "qinghai", "甘肃": "gansu", "宁夏回族自治区": "ningxia", "陕西": "shanxi1","山西":"shanxi",
  "四川": "sichuan", "云南": "yunnan", "贵州": "guizhou", "重庆市": "chongqing", "湖北": "hubei", "湖南": "hunan",
@@ -17,9 +20,13 @@ var provinces = {"新疆": "xinjiang", "西藏": "xizang", "青海": "qinghai", 
  "浙江": "zhejiang", "上海市": "shanghai", "江苏": "jiangsu", "山东": "shandong", "河北": "hebei", "河南": "henan",
  "北京市": "beijing", "天津市": "tianjin", "辽宁": "liaoning", "吉林": "jilin", "黑龙江": "heilongjiang", "内蒙古": "neimenggu",
  "安徽": "anhui", "香港":"xianggang", "China":"china", "World":"world"};
+ var dataLength = 5;//96 * 7;//TODO modify for pro
+ var startOfDayValue = moment().startOf('day').valueOf();
+ var maxSliderValue = startOfDayValue + 7*24*60*60*1000;
  // 手动调整每个省份的地图显示距离，避免地图在echarts组件内显示不全
  var viewControlDistance = {"jiangsu":120,"guangdong":120,"shanxi":250,"shanxi1":250};
  var dataProvider = get7DaysData(mockPowerArray,cityGeoInfo);
+ var dataProviderFarm = get7DaysData(mockPowerArrayFarm,farmGeoInfo);
 //  [
 //    [{"name":"海门","value":[121.15,31.89,"203.36"],"province":"江苏"},
 //    {"name":"鄂尔多斯","value":[109.78,39.60,"103.36"],"province":"内蒙古"},
@@ -40,28 +47,46 @@ export default class Map extends PureComponent {
       map: 'china',
       notMerge: false,
       ticktack: 0,
-      currentSliderValue: Date.now(),
+      dataProvider: dataProvider,
+      currentSliderValue: startOfDayValue,
       playButtonOn: true,
-      timeSliderTicks:timeSliderTicks,//TODO 无法更新，需要调研
-      timeSliderTicksLabels:["今天", "10月3日", "10月4日", "10月5日", "10月6日", "10月7日", "10月8日", ""]//timeSliderTicksLabels
+      timeSliderTicks:timeSliderTicks,
+      timeSliderTicksLabels:timeSliderTicksLabels
     };
   }
   timeTicket = null;
   floatDirection = {left:'31%'};
   fetchNewDate = () => {
-    var tick = (this.state.ticktack + 1)%5;
+    var tick = (this.state.ticktack + 1)%dataLength;
+    var nextSliderValue = this.state.currentSliderValue+15*60*1000;
+    var nextSliderValueUse = nextSliderValue > maxSliderValue ? startOfDayValue : nextSliderValue;
     this.setState({
       ticktack: tick,
-      currentSliderValue:this.state.currentSliderValue+15*60*1000,
-      timeSliderTicksLabels:getTicksLabel(),
+      currentSliderValue: nextSliderValueUse,
     });
     // if 当前时间是00：00：00
     let now = moment();
-    if(now.isSame(moment().startOf('day'))){
-      // 刷新一下 timeSlider的ticks 和ticksLabel
+    if(now.isSame(moment().startOf('day')))
+    {
+      // 刷新 timeSlider的ticks 和ticksLabel
       this.setState({
         timeSliderTicks: getTicks(),
         timeSliderTicksLabels:getTicksLabel(),
+      },()=>{
+        ReactDOM.unmountComponentAtNode(this.refs["slider-ref"]);
+        ReactDOM.render(<ReactBootstrapSlider
+                          id="slider-id"
+                          ticks={this.state.timeSliderTicks}
+                          ticks_labels={this.state.timeSliderTicksLabels}
+                          // ticks_snap_bounds={30}
+                          tooltip= {'always'}
+                          value={this.state.currentSliderValue}
+                          slideStop={this.changeSliderValue}
+                          formatter={function(val){
+                            var selectTime = moment(val);
+                            return selectTime.format('MM-DD HH:mm');
+                          }}
+                        />, this.refs["slider-ref"]); 
       });
       //TODO 并且重新获取下数据
     }
@@ -150,7 +175,7 @@ export default class Map extends PureComponent {
         show: false,
         formatter: '{b}'
       },
-      data: dataProvider[this.state.ticktack],
+      data: this.state.dataProvider[this.state.ticktack],
     }]
   });
 
@@ -167,9 +192,15 @@ export default class Map extends PureComponent {
       if(key==='china'){
         this.props.switchPage(1);
         this.floatDirection = {left:'31%'};
+        this.setState({
+          dataProvider: dataProvider
+        });
       } else {
         this.props.switchPage(2);
         this.floatDirection = {right:'31%'};
+        this.setState({
+          dataProvider: dataProviderFarm
+        });
       }
       if(!loadedmaps[key] && (loadedmaps[key]=1))
           fetch('./maps/' + key + '.json')
@@ -182,12 +213,14 @@ export default class Map extends PureComponent {
   };
   changeSliderValue  = e => {
     console.log("changeValue triggered",e.target.value);
+    var clickValue = e.target.value;
+    var tickValue = Math.floor((clickValue - startOfDayValue)/15);
     this.setState({
-      currentSliderValue: e.target.value,
+      currentSliderValue: clickValue,
+      ticktack: tickValue % dataLength,
       playButtonOn: false
     });
     clearInterval(this.timeTicket);
-    //TODO 修改地图显示的数据dataProvider
   };
   clickPlay = (e) => {
     console.log("play button triggered",e.target);
@@ -222,19 +255,21 @@ export default class Map extends PureComponent {
           </div>
           <div id="time-container">
             <input type="button" className={`play-button ${playButtonClass}`} onClick={(e)=>this.clickPlay(e)} />
-            <ReactBootstrapSlider
-              id="slider-id"
-              ticks={this.state.timeSliderTicks}
-              ticks_labels={this.state.timeSliderTicksLabels}
-              // ticks_snap_bounds={30}
-              tooltip= {'always'}
-              value={this.state.currentSliderValue}
-              slideStop={this.changeSliderValue}
-              formatter={function(val){
-                var selectTime = moment(val);
-                return selectTime.format('MM-DD HH:mm');
-              }}
-            />
+            <div id="slider-container" ref="slider-ref">
+              <ReactBootstrapSlider
+                id="slider-id"
+                ticks={this.state.timeSliderTicks}
+                ticks_labels={this.state.timeSliderTicksLabels}
+                // ticks_snap_bounds={30}
+                tooltip= {'always'}
+                value={this.state.currentSliderValue}
+                slideStop={this.changeSliderValue}
+                formatter={function(val){
+                  var selectTime = moment(val);
+                  return selectTime.format('MM-DD HH:mm');
+                }}
+              />
+            </div>
           </div>
         </div>
     );

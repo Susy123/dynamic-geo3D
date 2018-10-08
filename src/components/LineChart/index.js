@@ -14,13 +14,38 @@ export default class LineChart extends PureComponent {
     super(props);
     this.state = {
     };
+    this.autoResize = this._autoResize.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
     componentDidMount() {
+        this.autoResize('el', 'rightBox', 'right');
+        this.screenChange();
     }
     componentWillReceiveProps (nextProps) {
         console.log(nextProps)
+        setTimeout(() => {
+            this.autoResize('el', 'rightBox', 'right')
+        }, 20)
         // this.draw(nextProps.data)
+    }
+    screenChange() {
+        window.addEventListener('resize', this.resize);
+    }
+    resize () {
+        this.autoResize('el', 'rightBox', 'right')
+    }
+    _autoResize (elRef, box, direction) {
+        let zooms = (window.innerHeight / 1080).toFixed(3); // 当前网页的高度/UI效果图高度 = 缩放的比例
+        let el = this.refs[elRef];
+        let elWidth = el.offsetWidth;
+        let elHeight = el.offsetHeight;
+        //	parseInt(540*0.613-540)/2/0.613
+        //  parseInt(elWidth*zooms-elWidth)/2/zooms 宽度: 缩放后的宽度比原来的宽度之差的一半，再除以缩放的比例，是在当前网页需要x轴位移的真正距离。
+        let leftRange = direction === 'right' ? Math.abs(parseInt(elWidth*zooms-elWidth, 10)/2/zooms) : parseInt(elWidth*zooms-elWidth, 10)/2/zooms;
+        let topRange = parseInt(elHeight*zooms-elHeight, 10)/2/zooms;
+        el.style.transform=`scale(${zooms}) translate(${leftRange}px, ${topRange}px)`;
+        this.refs[box].style.width = elWidth * zooms + "px";
     }
     getPowerOption = (dataArray, timeArray) => {
         return {
@@ -322,26 +347,28 @@ export default class LineChart extends PureComponent {
       const capacity = this.add_comma_toThousands(this.props.propsData.capacity);
       const intradayElectric = this.add_comma_toThousands(this.props.propsData.intradayElectric);
     return (
-        <div className={`lineContainer ${this.props.className}`}>
-            <div className="header">
-                <p className="name">{this.props.propsData.adress}</p>
-                <p className="adress">地址：{this.props.propsData.detailAdress}</p>
-                <div className="descBox">
-                    <p className="capacity">容量：{capacity} WM</p>
-                    <p className="electicNum">当日发电量：{intradayElectric} KW</p>
+        <div className={`rightBox ${this.props.className}`} ref="rightBox">
+            <div className={`lineContainer ${this.props.className}`} ref="el">
+                <div className="header">
+                    <p className="name">{this.props.propsData.adress}</p>
+                    <p className="adress">地址：{this.props.propsData.detailAdress}</p>
+                    <div className="descBox">
+                        <p className="capacity">容量：{capacity} WM</p>
+                        <p className="electicNum">当日发电量：{intradayElectric} KW</p>
+                    </div>
                 </div>
-            </div>
-            <div className="content">
-                <ReactEcharts
-                    option={this.getPowerOption(this.props.propsData.powerData, this.props.propsData.timeData)}
-                    style={{height: '350px', width: '100%'}}
-                    className='react_for_echarts power' 
-                />
-                <ReactEcharts
-                    option={this.getWindSpeedOption(this.props.propsData.windspeedData, this.props.propsData.timeData)}
-                    style={{height: '350px', width: '100%'}}
-                    className='react_for_echarts windspeed' 
-                />
+                <div className="content">
+                    <ReactEcharts
+                        option={this.getPowerOption(this.props.propsData.powerData, this.props.propsData.timeData)}
+                        style={{height: '350px', width: '100%'}}
+                        className='react_for_echarts power' 
+                    />
+                    <ReactEcharts
+                        option={this.getWindSpeedOption(this.props.propsData.windspeedData, this.props.propsData.timeData)}
+                        style={{height: '350px', width: '100%'}}
+                        className='react_for_echarts windspeed' 
+                    />
+                </div>
             </div>
         </div>
       )

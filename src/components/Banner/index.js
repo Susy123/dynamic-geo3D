@@ -27,13 +27,23 @@ export default class Banner extends React.Component {
     super(props);
     this.state = {
     };
+    this.autoResize = this._autoResize.bind(this);
+    this.resize = this.resize.bind(this);
   }
 
     componentDidMount() {
+      this.autoResize('el', 'box');
+      this.screenChange();
     }
     componentWillReceiveProps (nextProps) {
         console.log(nextProps)
         // this.draw(nextProps.data)
+    }
+    screenChange() {
+      window.addEventListener('resize', this.resize);
+    }
+    resize () {
+      this.autoResize('el', 'box')
     }
     // 添加序号
     addAttribute (arr) {
@@ -62,6 +72,18 @@ export default class Banner extends React.Component {
       }    
       return result;
     }
+    _autoResize (elRef, box, direction) {
+      let zooms = (window.innerHeight / 1080).toFixed(3); // 当前网页的高度/UI效果图高度 = 缩放的比例
+      let el = this.refs[elRef];
+      let elWidth = el.offsetWidth;
+      let elHeight = el.offsetHeight;
+      //	parseInt(540*0.613-540)/2/0.613
+      //  parseInt(elWidth*zooms-elWidth)/2/zooms 宽度: 缩放后的宽度比原来的宽度之差的一半，再除以缩放的比例，是在当前网页需要x轴位移的真正距离。
+      let leftRange = direction === 'right' ? Math.abs(parseInt(elWidth*zooms-elWidth, 10)/2/zooms) : parseInt(elWidth*zooms-elWidth, 10)/2/zooms;
+      let topRange = parseInt(elHeight*zooms-elHeight, 10)/2/zooms;
+      el.style.transform=`scale(${zooms}) translate(${leftRange}px, ${topRange}px)`;
+      this.refs[box].style.width = elWidth * zooms + "px";
+  }
   render() {
     let html = '';
     let color = '';
@@ -109,40 +131,42 @@ export default class Banner extends React.Component {
       return html;
     })
     return (
-        <div className={`bannerContainer ${this.props.className}`}>
-          <div className="header">
-            <div className="titleArea">
-              <span className="colorBulk"></span>
-              <div className="textArea">
-                <p className="name">全国发电量</p>
-                <p className="littleName">POWER GENERATION</p>
+        <div className={`box ${this.props.className}`} ref="box">
+          <div className={`bannerContainer ${this.props.className}`} ref="el">
+            <div className="header">
+              <div className="titleArea">
+                <span className="colorBulk"></span>
+                <div className="textArea">
+                  <p className="name">全国发电量</p>
+                  <p className="littleName">POWER GENERATION</p>
+                </div>
+              </div>
+              <div className="totalText">
+                <p className="electicNum">{totalNum}</p>
+                <span className="unitText">MW</span>
               </div>
             </div>
-            <div className="totalText">
-              <p className="electicNum">{totalNum}</p>
-              <span className="unitText">MW</span>
-            </div>
-          </div>
-          <div className="content">
-            <div className="titleArea">
-              <span className="colorBulk"></span>
-              <div className="textArea">
-                <p className="name">未来一周发电量排行</p>
-                <p className="littleName">LIST</p>
+            <div className="content">
+              <div className="titleArea">
+                <span className="colorBulk"></span>
+                <div className="textArea">
+                  <p className="name">未来一周发电量排行</p>
+                  <p className="littleName">LIST</p>
+                </div>
               </div>
-            </div>
-            <div className="carouselArea">
-              <Carousel indicatorPosition="outside" height="444px">
-                {
-                  listHtml.map((item, index) => {
-                      return (
-                        <Carousel.Item key={index} >
-                          <ul className="bannerArea" dangerouslySetInnerHTML = {{ __html:item }}></ul>
-                        </Carousel.Item>
-                      )
-                  })
-                }
-              </Carousel>
+              <div className="carouselArea">
+                <Carousel indicatorPosition="outside" height="444px">
+                  {
+                    listHtml.map((item, index) => {
+                        return (
+                          <Carousel.Item key={index} >
+                            <ul className="bannerArea" dangerouslySetInnerHTML = {{ __html:item }}></ul>
+                          </Carousel.Item>
+                        )
+                    })
+                  }
+                </Carousel>
+              </div>
             </div>
           </div>
         </div>

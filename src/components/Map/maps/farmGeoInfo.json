@@ -1,0 +1,6 @@
+{
+    "Farm01":{"lonlat":[121.05, 32.08], "address":"江苏省南通市xxx街道", "capacity":991},
+    "Farm02":{"lonlat":[118.78, 32.04], "address":"江苏省南京市xxx街道", "capacity":992},
+    "Farm03":{"lonlat":[120.62, 31.32], "address":"江苏省苏州市xxx街道", "capacity":993},
+    "Farm04":{"lonlat":[119.32, 33.23], "address":"江苏省宝应xxx街道", "capacity":994}
+}
