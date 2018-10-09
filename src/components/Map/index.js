@@ -7,12 +7,12 @@ import echarts from 'echarts';
 import 'echarts-gl';
 import china from './maps/china.json';
 import './index.css';
-import cityGeoInfo from './maps/cityGeoInfo.json';
-import farmGeoInfo from './maps/farmGeoInfo.json';
-import {get7DaysData, getTicks, getTicksLabel} from './dao.js';
+import cityGeoInfo from './maps/cityGeoInfo_pro.json';
+import farmGeoInfo from './maps/farmGeoInfo_pro.json';
+import {get7DaysData, getTicks, getTicksLabel, getMaxPower} from './dao.js';
 // mock
-import mockPowerArray from '../../mock/cityPower.json';
-import mockPowerArrayFarm from '../../mock/farmPower.json';
+import mockPowerArray from '../../mock/cityPower_new.json';
+import mockPowerArrayFarm from '../../mock/farmPower_new.json';
 
 var provinces = {"新疆": "xinjiang", "西藏": "xizang", "青海": "qinghai", "甘肃": "gansu", "宁夏回族自治区": "ningxia", "陕西": "shanxi1","山西":"shanxi",
  "四川": "sichuan", "云南": "yunnan", "贵州": "guizhou", "重庆市": "chongqing", "湖北": "hubei", "湖南": "hunan",
@@ -26,7 +26,9 @@ var provinces = {"新疆": "xinjiang", "西藏": "xizang", "青海": "qinghai", 
  // 手动调整每个省份的地图显示距离，避免地图在echarts组件内显示不全
  var viewControlDistance = {"jiangsu":120,"guangdong":120,"shanxi":250,"shanxi1":250};
  var dataProvider = get7DaysData(mockPowerArray,cityGeoInfo);
- var dataProviderFarm = get7DaysData(mockPowerArrayFarm,farmGeoInfo);
+ var dataProviderMax = getMaxPower(mockPowerArray);
+ var dataProviderFarm = get7DaysData(mockPowerArrayFarm,farmGeoInfo,1/2);
+ var dataProviderFarmMax = getMaxPower(mockPowerArrayFarm);
 //  [
 //    [{"name":"海门","value":[121.15,31.89,"203.36"],"province":"江苏"},
 //    {"name":"鄂尔多斯","value":[109.78,39.60,"103.36"],"province":"内蒙古"},
@@ -48,6 +50,8 @@ export default class Map extends PureComponent {
       notMerge: false,
       ticktack: 0,
       dataProvider: dataProvider,
+      dataProviderMax: dataProviderMax,
+      powerNum: 1/3,
       currentSliderValue: startOfDayValue,
       playButtonOn: true,
       timeSliderTicks:timeSliderTicks,
@@ -104,14 +108,35 @@ export default class Map extends PureComponent {
       clearInterval(this.timeTicket);
     }
   };
-  getOption = () => ({
+  getOption = () => {
+    var maxPowerLabel = this.state.dataProviderMax;
+    var maxValue = Math.pow(maxPowerLabel,this.state.powerNum);
+
+    var powerLableItem = Math.ceil(maxPowerLabel/5);
+    var valueItem = Math.ceil(maxValue/5);
+    // 连续型数据平均分段 模式不会默认为 series.data 的 dataMin 和 dataMax，需自行定义
+    // 另最大最小差距过大，故对其分别进行2开方和3开方进行可视化矫正
+    var pieces = [
+      {min:valueItem*4,max:valueItem*5,label:`${powerLableItem*4}-${powerLableItem*5}`},
+      {min:valueItem*3,max:valueItem*4,label:`${powerLableItem*3}-${powerLableItem*4}`},
+      {min:valueItem*2,max:valueItem*3,label:`${powerLableItem*2}-${powerLableItem*3}`},
+      {min:valueItem,max:valueItem*2,label:`${powerLableItem}-${powerLableItem*2}`},
+      {min:0,max:valueItem,label:`0-${powerLableItem}`},
+    ];
+    return {
       visualMap: {
-        min: 0,
-        max: 300,
+        // min: 0,
+        // max: 300,
         splitNumber: 5,
+        pieces: pieces,
         color: ['#FF7070', '#FFF2AD', '#90FFB7', '#50B9FF', '#0072ED'],
-        showLabel:false,
-        right:'7%',
+        showLabel:true,
+        textStyle:{
+          color:'white'
+        },
+        text:['MW'],
+        align:true,
+        right:'2%',
         bottom:'4%'
       },
       geo3D: {
@@ -122,6 +147,7 @@ export default class Map extends PureComponent {
         },
         roam: true,
         regionHeight:0.5,
+        boxHeight:20,//可以控制柱子高度的空间
       environment: 'auto',
         itemStyle: {
             borderColor: "#4096B9",
@@ -168,6 +194,7 @@ export default class Map extends PureComponent {
       animation: true,
       coordinateSystem: 'geo3D',
       barSize: 1, //柱子粗细
+      minHeight: 0.5,
       shading: 'lambert',
       opacity: 1,
       bevelSize:0.3,
@@ -177,14 +204,42 @@ export default class Map extends PureComponent {
       },
       data: this.state.dataProvider[this.state.ticktack],
     }]
-  });
+  }
+};
 
   onChartClick = (param, echarts) => {
-    console.log(param, echarts);
-    this.select(param.data.province);
-    this.setState({
-      cnt: this.state.cnt + 1,
-    })
+    // console.log(param, echarts);
+    if(this.state.map === 'china'){
+      this.select(param.data.province);
+    } else {
+      this.selectFarm(param.name);
+    }
+    
+    // this.setState({
+    //   cnt: this.state.cnt + 1,
+    // })
+  };
+  selectFarm = (farmName) =>{
+    //TODO 转换数据结构
+    var farmData = {
+      adress: farmName,
+      detailAdress: '江苏省无锡市',
+      capacity: '999999',
+      intradayElectric: '999',
+      powerData: [
+        133,200,180,340,308,249,260,273,288,103,299,295,191,187,183,279,275,271,167,164,161,258,255,152
+        ],
+      windspeedData: [
+        133,200,180,340,308,249,260,273,288,103,299,295,191,187,183,279,275,271,167,164,161,258,255,152
+        ],
+      timeData: [
+        '2009/6/12 2:00', '2009/6/12 3:00', '2009/6/12 4:00', '2009/6/12 5:00', '2009/6/12 6:00',
+        '2009/6/12 7:00',  '2009/6/12 8:00', '2009/6/12 9:00', '2009/6/12 10:00', '2009/6/12 11:00',
+        '2009/6/12 12:00', '2009/6/12 13:00', '2009/6/12 14:00', '2009/6/12 15:00', '2009/6/12 16:00',
+        '2009/6/12 17:00', '2009/6/12 18:00', '2009/6/12 19:00', '2009/6/12 20:00', '2009/6/12 21:00',
+        '2009/6/12 22:00', '2009/6/12 23:00', '2009/6/12 00:00', '2009/6/12 1:00']
+    };
+    this.props.selectFarm(farmData);
   };
   select = (key) => {
     key = provinces[key];
@@ -193,14 +248,19 @@ export default class Map extends PureComponent {
         this.props.switchPage(1);
         this.floatDirection = {left:'31%'};
         this.setState({
-          dataProvider: dataProvider
+          dataProvider: dataProvider,
+          dataProviderMax,
+          powerNum:1/3
         });
       } else {
         this.props.switchPage(2);
         this.floatDirection = {right:'31%'};
         this.setState({
-          dataProvider: dataProviderFarm
+          dataProvider: dataProviderFarm,
+          dataProviderMax: dataProviderFarmMax,
+          powerNum:1/2
         });
+        this.selectFarm(dataProviderFarm[0][0].name);
       }
       if(!loadedmaps[key] && (loadedmaps[key]=1))
           fetch('./maps/' + key + '.json')

@@ -24,7 +24,7 @@
 }
 .play-button {
     position: absolute;
-    left: 6%;
+    left: 2%;
     margin-top: -8px;
     border-style: dashed;
     background-color: transparent;
@@ -50,8 +50,8 @@
     bottom: 5%;
 }
 #slider-id {
-    margin: auto;
-    left: 0px;
+    /* margin: auto; */
+    left: 7%;
     right: 0px;
     position: absolute;
 }

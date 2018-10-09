@@ -4,24 +4,6 @@ import "./index.css"
 
 import 'element-theme-default';
 
-// const data = {
-// 	total: '123324134',
-// 	list: [
-// 		    {name: '华东电网',electic: 99999},
-//       	{name: '华南电网',electic: 88888},
-//       	{name: '华西电网',electic: 77777},
-//       	{name: '华北电网',electic: 66666},
-//       	{name: '华东电网2',electic: 55555},
-//       	{name: '华南电网2',electic: 45454},
-//       	{name: '华西电网2',electic: 34343},
-//       	{name: '华北电网2',electic: 23232},
-//       	{name: '华东电网3',electic: 12121},
-//       	{name: '华南电网3',electic: 11111},
-//       	{name: '华西电网3',electic: 9999},
-//       	{name: '华北电网3',electic: 8888},
-//       	{name: '华东电网4',electic: 7777}
-// 	]
-// }
 export default class Banner extends React.Component {
   constructor(props) {
     super(props);
@@ -88,22 +70,22 @@ export default class Banner extends React.Component {
     let html = '';
     let color = '';
     let totalNum = this.add_comma_toThousands(this.props.propsData.total);
-    let firstElectic = this.props.propsData.list[0].electic;
+    let firstElectic = this.props.propsData.list[0].electric;
     let colorArray = ['#FF7070', '#FFF2AD', '#90FFB7', '#50B9FF', '#0072ED'];
     this.addAttribute(this.props.propsData.list)
     const listHtml = this.splitArray(5, this.props.propsData.list).map((item, index) => {
       html = '';
       item.forEach((place, index) => {
-        // html += `<div><p style="width:${((place.electic/firstElectic)*100).toFixed(0)}%">${place.index}</p><p>${place.name}</p><p>${place.electic}</p></div>`;
-        if (((place.electic/firstElectic)*100).toFixed(0) >= 80) {
+        // html += `<div><p style="width:${((place.electric/firstElectic)*100).toFixed(0)}%">${place.index}</p><p>${place.name}</p><p>${place.electric}</p></div>`;
+        if (((place.electric/firstElectic)*100).toFixed(0) >= 80) {
           color = colorArray[0]
-        } else if (((place.electic/firstElectic)*100).toFixed(0) >= 60) {
+        } else if (((place.electric/firstElectic)*100).toFixed(0) >= 60) {
           color = colorArray[1]
-        } else if (((place.electic/firstElectic)*100).toFixed(0) >= 40) {
+        } else if (((place.electric/firstElectic)*100).toFixed(0) >= 40) {
           color = colorArray[2]
-        } else if (((place.electic/firstElectic)*100).toFixed(0) >= 20) {
+        } else if (((place.electric/firstElectic)*100).toFixed(0) >= 20) {
           color = colorArray[3]
-        } else if (((place.electic/firstElectic)*100).toFixed(0) >= 0) {
+        } else if (((place.electric/firstElectic)*100).toFixed(0) >= 0) {
           color = colorArray[4]
         }
 
@@ -119,10 +101,10 @@ export default class Banner extends React.Component {
               <div class="progressArea">
                 <div class="descBox">
                   <p class="name">${place.name}：</p>
-                  <p class="electic">${place.electic}</p>
+                  <p class="electric">${place.electric}</p>
                 </div>
                 <div class="progressBox">
-                  <div class="progressBar" style="width:${((place.electic/firstElectic)*100).toFixed(0)}%;background-color:${color};"></div>
+                  <div class="progressBar" style="width:${((place.electric/firstElectic)*100).toFixed(0)}%;background-color:${color};"></div>
                 </div>
               </div>
             </li>
@@ -137,7 +119,7 @@ export default class Banner extends React.Component {
               <div className="titleArea">
                 <span className="colorBulk"></span>
                 <div className="textArea">
-                  <p className="name">全国发电量</p>
+                  <p className="name">全国功率</p>
                   <p className="littleName">POWER GENERATION</p>
                 </div>
               </div>

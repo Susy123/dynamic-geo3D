@@ -37,19 +37,25 @@ var Utils={
 
 export default Utils;
 
-export function get7DaysData(resPower,cityGeoInfo){
+export function get7DaysData(resPower,cityGeoInfo,sqrt=1/3){
     let data = [];
     let length = resPower[0].power.length;
     for(let i = 0; i<length;i++){
         let dataI = resPower.map(item=>({
             "name":item.name,
-            "value":cityGeoInfo[item.name].lonlat.concat(item.power[i]),
+            "value":cityGeoInfo[item.name].lonlat.concat((Math.pow(item.power[i],sqrt)).toFixed(2)),
             "province":cityGeoInfo[item.name].province
         }));
 
         data.push(dataI);
     }
     return data;
+}
+
+export function getMaxPower(resPower){
+    let maxPowerList = resPower.map(item=>Math.max(...item.power));
+    let maxPower = Math.max(...maxPowerList);
+    return maxPower;
 }
 
 
