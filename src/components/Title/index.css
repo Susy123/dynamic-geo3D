@@ -1,0 +1,45 @@
+/* 大标题样式 */
+.titleContainer{
+    width: 355.5499px;
+    height: 56.888px;
+    border:0.7111px solid #00ccff80;
+    position: absolute;
+    top:18px;
+    font-size:25.5px;
+    color:#EDF9FF;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    line-height: 56.888px;
+    text-align: center;
+    background:rgba(3,6,25,0.5);
+    }
+    .titleContainer .square{
+    width:8.5332px;
+    height:8.5332px;
+    position: absolute;
+    border:1.6222px solid #00CCFF;
+    }
+    .titleContainer .square.left1{
+    top:-0.7111px;
+    left:-0.7111px;
+    border-right: none;
+    border-bottom: none;
+    }
+    .titleContainer .square.left2{
+    bottom:-0.7111px;
+    left:-0.7111px;
+    border-top: none;
+    border-right: none;
+    }
+    .titleContainer .square.right1{
+    top:-0.7111px;
+    right:-0.7111px;
+    border-left: none;
+    border-bottom: none;
+    }
+    .titleContainer .square.right2{
+    bottom:-0.7111px;
+    right:-0.7111px;
+    border-top: none;
+    border-left: none;
+    }

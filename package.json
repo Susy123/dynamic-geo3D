@@ -99,5 +99,14 @@
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "proxy": {
+    "/stateforecast": {
+      "target": "http://10.21.6.61:8080/",
+      "changeOrigin": true,
+      "pathRewrite": {
+        "^/stateforecast": ""
+      }
+    }
   }
 }

@@ -23,7 +23,7 @@ export default class LineChart extends PureComponent {
         this.screenChange();
     }
     componentWillReceiveProps (nextProps) {
-        console.log(nextProps)
+        // console.log(nextProps)
         setTimeout(() => {
             this.autoResize('el', 'rightBox', 'right')
         }, 20)
@@ -50,7 +50,7 @@ export default class LineChart extends PureComponent {
     getPowerOption = (dataArray, timeArray) => {
         return {
           title: {
-            text: '功率详情',
+            text: '预测功率',
             textStyle: {
                 color:'#EDF9FF',
                 fontSize:20,
@@ -192,7 +192,7 @@ export default class LineChart extends PureComponent {
     getWindSpeedOption = (dataArray, timeArray) => {
         return {
           title: {
-            text: '风速详情',
+            text: '预测风速',
             textStyle: {
                 color:'#EDF9FF',
                 fontSize:20,
@@ -331,17 +331,36 @@ export default class LineChart extends PureComponent {
           ]
         };
     }
-    add_comma_toThousands(count) {    
-      var num = (count || 0).toString();    
-      var result = '';    
-      while (num.length > 3) {        
-        result = ',' + num.slice(-3) + result;
-        num = num.slice(0, num.length - 3);    
-      }    
-      if (num) { 
-        result = num + result; 
-      }    
-      return result;
+    add_comma_toThousands(number) {
+        if(number=='NaN' || number=='undefined' || number==="" || number===0)return 0;
+        var num = number + "";  
+        num = num.replace(new RegExp(",","g"),"");   
+        
+        var symble = "";   
+        if(/^([-+]).*$/.test(num)) {   
+            symble = num.replace(/^([-+]).*$/,"$1");   
+            num = num.replace(/^([-+])(.*)$/,"$2");   
+        }   
+       
+        if(/^[0-9]+(\.[0-9]+)?$/.test(num)) {   
+            var num = num.replace(new RegExp("^[0]+","g"),"");   
+            if(/^\./.test(num)) {
+                num = "0" + num;
+            }
+       
+            var decimal = num.replace(/^[0-9]+(\.[0-9]+)?$/,"$1");   
+            var integer= num.replace(/^([0-9]+)(\.[0-9]+)?$/,"$1");   
+       
+            var re=/(\d+)(\d{3})/;  
+       
+            while(re.test(integer)){   
+                integer = integer.replace(re,"$1,$2");  
+            }   
+            return symble + integer + decimal;   
+       
+        } else {   
+            return number;   
+        }   
     }
   render() {
       const capacity = this.add_comma_toThousands(this.props.propsData.capacity);
@@ -353,8 +372,8 @@ export default class LineChart extends PureComponent {
                     <p className="name">{this.props.propsData.adress}</p>
                     <p className="adress">地址：{this.props.propsData.detailAdress}</p>
                     <div className="descBox">
-                        <p className="capacity">容量：{capacity} WM</p>
-                        <p className="electicNum">当日发电量：{intradayElectric} KW</p>
+                        <p className="capacity">容量：{capacity} MW</p>
+                        <p className="electicNum">当日发电量：{intradayElectric} MWh</p>
                     </div>
                 </div>
                 <div className="content">

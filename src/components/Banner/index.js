@@ -18,7 +18,7 @@ export default class Banner extends React.Component {
       this.screenChange();
     }
     componentWillReceiveProps (nextProps) {
-        console.log(nextProps)
+        // console.log(nextProps)
         // this.draw(nextProps.data)
     }
     screenChange() {
@@ -101,7 +101,7 @@ export default class Banner extends React.Component {
               <div class="progressArea">
                 <div class="descBox">
                   <p class="name">${place.name}：</p>
-                  <p class="electric">${place.electric}</p>
+                  <p class="electric">${this.add_comma_toThousands(place.electric)} MW</p>
                 </div>
                 <div class="progressBox">
                   <div class="progressBar" style="width:${((place.electric/firstElectic)*100).toFixed(0)}%;background-color:${color};"></div>
@@ -113,8 +113,9 @@ export default class Banner extends React.Component {
       return html;
     })
     return (
-        <div className={`box ${this.props.className}`} ref="box">
+        <div className={`box ${this.props.className}`} ref="box" id='bannerBox'>
           <div className={`bannerContainer ${this.props.className}`} ref="el">
+            <div className="logo"></div>
             <div className="header">
               <div className="titleArea">
                 <span className="colorBulk"></span>
@@ -132,7 +133,7 @@ export default class Banner extends React.Component {
               <div className="titleArea">
                 <span className="colorBulk"></span>
                 <div className="textArea">
-                  <p className="name">未来一周发电量排行</p>
+                  <p className="name">区域功率</p>
                   <p className="littleName">LIST</p>
                 </div>
               </div>
