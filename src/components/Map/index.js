@@ -112,10 +112,10 @@ export default class Map extends PureComponent {
     }
     if(now.minute()===5&&now.second()===1){
       // 并且重新获取下数据
-      fetch('/stateforecast/power-generation')
+      fetch('./stateforecast/power-generation')
           .then(res => res.json())
           .then(res => mockElectric = res);
-      fetch('/stateforecast/forecast/farms')
+      fetch('./stateforecast/forecast/farms')
           .then(res => res.json())
           .then(res => {
             mockPowerArray = res;
@@ -129,7 +129,7 @@ export default class Map extends PureComponent {
           });
       if(this.provinceNow){
         // 处理数据
-        fetch(`/stateforecast/forecast?${this.provinceNow}`)
+        fetch(`./stateforecast/forecast?${this.provinceNow}`)
           .then(res => res.json())
           .then(res => {
             mockPowerArrayFarm = res;
@@ -148,10 +148,10 @@ export default class Map extends PureComponent {
   };
   componentDidMount() {
     // 准备数据
-    fetch('/stateforecast/power-generation')
+    fetch('./stateforecast/power-generation')
           .then(res => res.json())
           .then(res => mockElectric = res);
-    fetch('/stateforecast/forecast/farms')
+    fetch('./stateforecast/forecast/farms')
           .then(res => res.json())
           .then(res => {
             mockPowerArray = res;
@@ -371,7 +371,7 @@ export default class Map extends PureComponent {
         this.setState({loading:true});
         this.provinceNow = province;
         // 处理数据
-        fetch(`/stateforecast/forecast/farms?region=${province}`)
+        fetch(`./stateforecast/forecast/farms?region=${province}`)
           .then(res => res.json())
           .then(res => {
             mockPowerArrayFarm = res;
